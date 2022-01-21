@@ -1,6 +1,13 @@
-/*----------------------------------------------------------------------------------------------------------------------
-	Fraction sınıfı
-----------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+	FILE        : Fraction.java
+	AUTHOR      : Java-May-2021 Group
+	LAST UPDATE : 05.12.2021
+
+	Fraction class that represents a fraction
+
+	Copyleft (c) 1993 by C and System Programmers Association (CSD)
+	All Rights Free
+-----------------------------------------------------------------------*/
 package org.csystem.util.math;
 
 public class Fraction {
@@ -31,9 +38,9 @@ public class Fraction {
     {
         if (b == 0) {
             if (a == 0)
-               throw new FractionException("Indefinite", FractionExceptionStatus.INDEFINITE, a, b);
+                throw new OperationStatusException("Indeterminate", OperationStatus.INDETERMINATE);
 
-            throw new FractionException("Undefined", FractionExceptionStatus.UNDEFINED, a, b);
+            throw new OperationStatusException("Undefined", OperationStatus.UNDEFINED);
         }
     }
 
@@ -64,10 +71,11 @@ public class Fraction {
             m_b = 1;
             return;
         }
+
         m_a = a;
         m_b = b;
-        setSign();
-        simplify();
+        this.setSign();
+        this.simplify();
     }
 
     public Fraction()
@@ -94,7 +102,7 @@ public class Fraction {
 
     public void setNumerator(int val)
     {
-        if (val == m_a)
+        if (m_a == val)
             return;
 
         this.set(val, m_b);
@@ -107,7 +115,7 @@ public class Fraction {
 
     public void setDenominator(int val)
     {
-        if (val == m_b)
+        if (m_b == val)
             return;
 
         check(m_a, val);
@@ -116,7 +124,7 @@ public class Fraction {
 
     public double getRealValue()
     {
-        return (double) m_a / m_b;
+        return (double)m_a / m_b;
     }
 
     //add methods
@@ -183,30 +191,35 @@ public class Fraction {
         return divide(m_a, m_b, val, 1);
     }
 
-    //increment
-    public void increment(int val)
+    //increment methods
+    public void inc(int val)
     {
         m_a += m_b * val;
     }
 
-    public void increment()
+    public void inc()
     {
-        this.increment(1);
+        this.inc(1);
     }
 
-    //decrement
-    public void decrement(int val)
+    //decrement methods
+    public void dec(int val)
     {
-        this.increment(-val);
+        inc(-val);
     }
 
-    public void decrement()
+    public void dec()
     {
-        this.decrement(1);
+        dec(1);
     }
 
     public String toString()
     {
-        return String.format("%d%s", m_a, m_b == 1 ? "" : String.format(" / %s = %f", m_b, getRealValue()));
+        return this.toString(6);
+    }
+
+    public String toString(int n)
+    {
+        return String.format(String.format("%%d / %%d = %%.%df", n), m_a, m_b, this.getRealValue());
     }
 }

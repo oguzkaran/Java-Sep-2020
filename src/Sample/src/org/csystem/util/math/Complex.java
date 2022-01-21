@@ -1,82 +1,125 @@
-/*----------------------------------------------------------------------------------------------------------------------
-	Complex sınıfı
-----------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+	FILE        : Complex.java
+	AUTHOR      : Java-May-2021 Group
+	LAST UPDATE : 14.11.2021
+
+	Immutable Complex class that can be used for Complex numbers
+
+	Copyleft (c) 1993 by C and System Programmers Association (CSD)
+	All Rights Free
+-----------------------------------------------------------------------*/
 package org.csystem.util.math;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
+
+
 public class Complex {
-	private static Complex add(double a1, double b1, double a2, double b2)
-	{		
-		return new Complex(a1 + a2, b1 + b2);
+	private static Complex add(double real1, double imag1, double real2, double imag2)
+	{				
+		return new Complex(real1 + real2, imag1 + imag2);
 	}
 	
-	private static Complex subtract(double a1, double b1, double a2, double b2)
+	private static Complex subtract(double real1, double imag1, double real2, double imag2)
 	{
-		return add(a1, b1, -a2, -b2);
+		return add(real1, imag1, -real2, -imag2);				
 	}
-	
-	public double re;
-	public double im;
+
+	private final double m_real;
+	private final double m_imag;
 	
 	public Complex()
-	{		
+	{
+		this(0);
 	}	
+	
+	public Complex(Complex other)
+	{
+		this(other.m_real, other.m_imag);
+	}
 	
 	public Complex(double re)
 	{
-		this.re = re;
+		this(re, 0);
 	}
 	
 	public Complex(double re, double im)
 	{
-		this.re = re;
-		this.im = im;
+		m_real = re;
+		m_imag = im;
+	}
+
+	public double getReal()
+	{
+		return m_real;
+	}
+
+	public double getImag()
+	{
+		return m_imag;
+	}
+
+	public double getLength()
+	{
+		return this.getNorm();
 	}
 	
 	public double getNorm()
 	{
-		return Math.sqrt(re * re + im * im);
-	}
+		return sqrt(m_real * m_real + m_imag * m_imag);
+	}	
 	
 	public Complex getConjugate()
 	{
-		return new Complex(re, -im);		
+		return new Complex(m_real, -m_imag);
 	}
 	
-	//add methods
-	public Complex add(Complex other)
+	//add	
+	public static Complex add(double val, Complex right)
 	{
-		return add(re, im, other.re, other.im);						
+		return add(val, 0, right.m_real, right.m_imag);
 	}
+	
+	public Complex add(Complex right)
+	{
+		return add(m_real, m_imag, right.m_real, right.m_imag);
+	}	
 	
 	public Complex add(double val)
 	{
-		return add(re, im, val, 0);
+		return add(m_real, m_imag, val, 0);
 	}
 	
-	public static Complex add(double val, Complex z)
+	//subtract
+	public static Complex subtract(double val, Complex right)
 	{
-		return add(val, 0, z.re, z.im);
+		return subtract(val, 0, right.m_real, right.m_imag);
 	}
 	
-	//subtract methods
-	public Complex subtract(Complex other)
+	public Complex subtract(Complex right)
 	{
-		return subtract(re, im, other.re, other.im);						
-	}
+		return subtract(m_real, m_imag, right.m_real, right.m_imag);
+	}	
 	
 	public Complex subtract(double val)
 	{
-		return subtract(re, im, val, 0);
+		return subtract(m_real, m_imag, val, 0);
 	}
 	
-	public static Complex subtract(double val, Complex z)
+	//inc
+	public Complex inc()
 	{
-		return subtract(val, 0, z.re, z.im);
+		return this.add(1);
 	}
 	
+	//dec
+	public Complex dec()
+	{
+		return this.inc();
+	}
+
 	public String toString()
-	{
-		return String.format("|%.2f + %.2f * i| = %f", re, im, getNorm());
+	{				
+		return String.format("|%.1f%si| = %f", m_real, (m_imag < 0 ? " - " : " + ") +  abs(m_imag), this.getNorm());
 	}
 }
-

@@ -1,29 +1,38 @@
 /*----------------------------------------------------------------------------------------------------------------------
-    RandomAccessFile sınıfı ile basit bir örnek. Örnekte hem dosyaya yazma hem de dosyadan okuma yapılmıştır
+	CSDArrayList sınıfı
 ----------------------------------------------------------------------------------------------------------------------*/
 package org.csystem.app;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.csystem.application.device.Device;
+import org.csystem.util.console.Console;
+import org.csystem.util.string.StringUtil;
+import org.csystem.util.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 class App {
-    public static void main(String[] args) throws IOException
-    {
-        BufferedReader kb = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args)
+	{
+		ArrayList<Pair<String, Device>> devices = new ArrayList<>();
+		Random r = new Random();
+		int count = Console.readInt("Bir sayı giriniz:");
 
-        for (;;) {
-            System.out.print("Bir yazı giriniz:");
-            String str = kb.readLine();
+		for (int i = 0; i < count; ++i) {
+			String name = StringUtil.getRandomTextTR(r, 10);
+			devices.add(Pair.of(name, new Device(i + 1, name, Util.getRandomHost(r))));
+		}
 
-            if ("elma".equals(str))
-                break;
-            byte [] data = str.getBytes();
+		int size = devices.size();
 
-            System.out.printf("Length:%d%n", data.length);
-        }
-
-        System.out.println("Tekrar yapıyor musunuz?");
-    }
+		for (int i = 0; i < size; ++i)
+			System.out.println(devices.get(i));
+	}
 }
 
+class Util {
+	public static String getRandomHost(Random r)
+	{
+		return r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
+	}
+}

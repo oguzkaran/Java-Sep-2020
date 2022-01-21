@@ -1,6 +1,13 @@
-/*----------------------------------------------------------------------------------------------------------------------
-	AnalyticalCircle sınıfı
-----------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+	FILE        : AnalyticalCircle.java
+	AUTHOR      : Java-May-2021 Group
+	LAST UPDATE : 06.11.2021
+
+	AnalyticalCircle class that represents the analytical circle in geometry
+
+	Copyleft (c) 1993 by C and System Programmers Association (CSD)
+	All Rights Free
+-----------------------------------------------------------------------*/
 package org.csystem.util.math.geometry;
 
 public class AnalyticalCircle extends Circle {
@@ -9,6 +16,16 @@ public class AnalyticalCircle extends Circle {
     public AnalyticalCircle()
     {
         this(0);
+    }
+
+    public AnalyticalCircle(double x, double y)
+    {
+        this(0, x, y);
+    }
+
+    public AnalyticalCircle(double r)
+    {
+        this(r, 0, 0);
     }
 
     public AnalyticalCircle(Point center)
@@ -21,63 +38,60 @@ public class AnalyticalCircle extends Circle {
         this(r, center.x, center.y);
     }
 
-    public AnalyticalCircle(double r)
-    {
-        this(r, 0, 0);
-    }
-
-    public AnalyticalCircle(int x, int y)
-    {
-        this(0, x, y);
-    }
-
-    public AnalyticalCircle(double r, int x, int y) //primary ctor
+    public AnalyticalCircle(double r, double x, double y)
     {
         super(r);
-        m_center = new Point(x, y);
+        m_center =  Point.createCartesian(x, y);
     }
 
-    public int getX() {return m_center.x;}
-    public int getY() {return m_center.y;}
-
-    public Point getCenter()
+    public double getX()
     {
-        return new Point(m_center.x, m_center.y);
+        return m_center.x;
     }
 
-    public void setX(int x)
+    public void setX(double x)
     {
         m_center.x = x;
     }
 
-    public void setY(int y)
+    public double getY()
+    {
+        return m_center.y;
+    }
+
+    public void setY(double y)
     {
         m_center.y = y;
     }
 
-    public void set(int x, int y)
+    public Point getCenter()
     {
-        this.setX(x);
-        this.setY(y);
+        return new Point(m_center);
     }
 
-    public void set(Point center)
+    public void setCenter(Point center)
     {
-        this.set(center.x, center.y);
+        setCenter(center.x, center.y);
     }
 
-    public void offset(int dxy)
+    public void setCenter(double x, double y)
     {
-        this.offset(dxy, dxy);
+        setX(x);
+        setY(y);
     }
 
-    public void offset(int dx, int dy)
+    public void offset(double dx, double dy) //delegate method
     {
         m_center.offset(dx, dy);
     }
 
-    public double centerDistance(AnalyticalCircle analyticalCircle)
+    public void offset(double dxy) //delegate method
     {
-        return m_center.distance(analyticalCircle.m_center);
+        offset(dxy, dxy);
+    }
+
+    public double centerDistance(AnalyticalCircle other)
+    {
+        return m_center.distance(other.m_center);
     }
 }

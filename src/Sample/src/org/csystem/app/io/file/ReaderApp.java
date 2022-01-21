@@ -1,40 +1,38 @@
 /*----------------------------------------------------------------------------------------------------------------------
-    Yukarıdaki örnek Files sınıfının newBufferedReader metodu ile de yapılabilir
+    ReaderApp
 ----------------------------------------------------------------------------------------------------------------------*/
 package org.csystem.app.io.file;
 
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import org.csystem.util.converter.BitConverter;
 
-final class ReaderApp {
-    private ReaderApp()
-    {
-    }
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static org.csystem.util.console.CommandLineUtil.checkIfNotEqualAndExit;
+
+public class ReaderApp {
     public static void main(String[] args)
     {
-        if (args.length != 1) {
-            System.err.println("Geçersiz sayıda argümanlar");
-            System.exit(-1);
-        }
+        checkIfNotEqualAndExit(args, 1, "Invalid arguments");
 
-        try (BufferedReader br = Files.newBufferedReader(Path.of(args[0]), StandardCharsets.UTF_8)) {
-           String line;
+        try (FileInputStream fis = new FileInputStream(args[0])) {
+            int result;
+            byte [] data = new byte[256];
 
-           while ((line = br.readLine()) != null)
-               System.out.println(line);
-        }
-        catch (EOFException ignore) {
-            System.out.println("\nOkuma tamalandı");
+            while ((result = fis.read(data)) > 0 && result == data.length) {
+                String str = BitConverter.toStringFixed(data);
+                System.out.println(str);
+            }
+
+            if (result != -1)
+                throw new IOException("File format corruption");
         }
         catch (FileNotFoundException ignore) {
-            System.err.println("Dosya bulunamadı");
+            System.err.println("File not found");
         }
-        catch (Throwable ex) {
-            System.err.printf("Exception:%s", ex.getMessage());
+        catch (IOException ex) {
+            System.err.printf("Exception occurs:%s", ex.getMessage());
         }
     }
 }

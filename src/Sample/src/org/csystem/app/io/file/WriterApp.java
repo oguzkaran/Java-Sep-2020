@@ -1,47 +1,39 @@
 /*----------------------------------------------------------------------------------------------------------------------
-    Yukarıdaki örnek Files sınıfının newBufferedWriter metodu ile de yapılabilir
+    WriterApp
 ----------------------------------------------------------------------------------------------------------------------*/
 package org.csystem.app.io.file;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import org.csystem.util.converter.BitConverter;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Scanner;
 
-final class WriterApp {
-    private WriterApp()
-    {
-    }
+import static org.csystem.util.console.CommandLineUtil.checkIfNotEqualAndExit;
+
+public class WriterApp {
     public static void main(String[] args)
     {
-        if (args.length != 1) {
-            System.err.println("Geçersiz sayıda argümanlar");
-            System.exit(-1);
-        }
+        checkIfNotEqualAndExit(args, 1, "Invalid arguments");
 
         Scanner kb = new Scanner(System.in);
 
-        try (BufferedWriter bw = Files.newBufferedWriter(Path.of(args[0]), StandardCharsets.UTF_8,
-                StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+        try (FileOutputStream fos = new FileOutputStream(args[0], true)) {
             for (;;) {
-                System.out.print("Bir yazı giriniz:");
+                System.out.print("Input a text:");
                 String text = kb.nextLine();
 
-                if ("elma".equals(text))
+                if ("quit".equals(text))
                     break;
 
-                bw.write(text);
-                bw.newLine();
-                bw.flush();
+                fos.write(BitConverter.getFixedBytes(text, 128));
             }
         }
         catch (NumberFormatException ignore) {
-            System.err.println("Geçersiz sayı formatı");
+            System.err.println("Invalid number format");
         }
-        catch (Throwable ex) {
-            System.err.printf("Exception:%s", ex.getMessage());
+        catch (IOException ignore) {
+            System.err.println("IO problem occurs. Try again later!...");
         }
     }
 }
